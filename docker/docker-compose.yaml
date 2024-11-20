@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  postgresql:
+    image: postgres:latest
+    hostname: "postgres"
+    container_name: "postgres"
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: root
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
