@@ -1,7 +1,6 @@
 /** @notice library imports */
 import type { Context } from "hono";
 import { StatusCodes } from "http-status-codes";
-// import type { BlankInput } from "hono/types";
 
 /// Local imports
 import { TodoServices } from "./TodoServices";

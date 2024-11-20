@@ -1,5 +1,4 @@
 /** @notice library imports */
-import "reflect-metadata";
 import { Hono } from "hono";
 
 /// Local imports

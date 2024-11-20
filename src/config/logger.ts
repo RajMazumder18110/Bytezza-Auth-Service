@@ -5,7 +5,7 @@ import { Environments } from "./environments";
 export const Logger = winston.createLogger({
   level: "info",
   defaultMeta: {
-    application: "Express template",
+    application: "Bytezza Auth Service",
   },
   format: winston.format.combine(
     winston.format.timestamp(),
@@ -16,13 +16,17 @@ export const Logger = winston.createLogger({
       level: "info",
       dirname: "logs",
       filename: "application.log",
-      silent: Environments.NODE_ENV === "development",
+      silent:
+        Environments.NODE_ENV === "test" ||
+        Environments.NODE_ENV === "development",
     }),
     new winston.transports.File({
       level: "error",
       dirname: "logs",
       filename: "error.log",
-      silent: Environments.NODE_ENV === "development",
+      silent:
+        Environments.NODE_ENV === "test" ||
+        Environments.NODE_ENV === "development",
     }),
     new winston.transports.Console({
       level: "info",

@@ -6,7 +6,7 @@ interface IEnvironments {
   PORT?: number;
 
   /// Database ///
-  DATABASE_URL: string;
+  POSTGRES_DATABASE_URL: string;
 }
 
 /// Environments
@@ -17,7 +17,7 @@ export const Environments = grabEnv<IEnvironments>({
   },
 
   /// Database ///
-  DATABASE_URL: {
+  POSTGRES_DATABASE_URL: {
     type: "string",
   },
 });
