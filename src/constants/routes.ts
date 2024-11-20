@@ -1,10 +1,8 @@
 const API_PREFIX = "/api";
 
 export const enum ApplicationRoutes {
-  TODOS = `${API_PREFIX}/todos`,
+  AUTH = `${API_PREFIX}/auth`,
 }
-export const enum TodosRoutes {
-  CREATE = "/",
-  GET_ALL = "/",
-  GET_BY_ID = "/:id",
+export const enum AuthRoutes {
+  REGISTER = "/register",
 }

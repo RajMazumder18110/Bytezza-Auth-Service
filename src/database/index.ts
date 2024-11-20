@@ -1,2 +1,2 @@
 /** @notice exports all the schema */
-export * from "./todoSchema";
+export * from "./users/schema";

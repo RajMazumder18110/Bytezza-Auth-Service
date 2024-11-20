@@ -1,5 +1,5 @@
 export type SuccessResponse<T extends Record<string, string>> = {
-  data: T;
+  data?: T;
   success: true;
   message?: string;
 };
