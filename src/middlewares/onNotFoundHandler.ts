@@ -14,7 +14,7 @@ export const onNotFoundHandler: NotFoundHandler = (c) => {
       success: false,
       path: c.req.path,
       code: "NOT_FOUND",
-      error: `Invalid API Path`,
+      message: `Invalid API Path`,
     },
     StatusCodes.NOT_FOUND,
   );
