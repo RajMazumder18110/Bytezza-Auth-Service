@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  postgresql:
+    extends:
+      file: ./services.base.yaml
+      service: postgresql
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: development
+      POSTGRES_PASSWORD: development
+      POSTGRES_DB: bytezza_auth_service
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data

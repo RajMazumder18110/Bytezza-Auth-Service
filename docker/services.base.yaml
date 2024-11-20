@@ -1,0 +1,7 @@
+version: "3.9"
+
+services:
+  postgresql:
+    image: postgres:latest
+    hostname: "postgres"
+    container_name: "postgres"
