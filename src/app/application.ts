@@ -3,14 +3,14 @@ import { Hono } from "hono";
 
 /// Local imports
 import { handlers } from "@/middlewares";
-import { todoRouter } from "@/todos/todoRouter";
+import { usersRouter } from "@/routers/userRouter";
 import { ApplicationRoutes } from "@/constants/routes";
 
 /// Core app
 const app = new Hono({ strict: false });
 
 /// Routers
-app.route(ApplicationRoutes.TODOS, todoRouter);
+app.route(ApplicationRoutes.AUTH, usersRouter);
 
 /// Global handlers
 app.onError(handlers.onErrorHandler);
