@@ -5,6 +5,7 @@ import { BlankEnv } from "hono/types";
 import { StatusCodes } from "http-status-codes";
 /// Local imports
 import { AuthRoutes } from "@/constants/routes";
+import { AuthVariables } from "@/types/variables";
 import { SuccessResponse } from "@/types/responses";
 import { LoginUserInput, NewUserInput } from "@/validators/userValidator";
 import { emailAlreadyExistsError, invalidEmailOrPasswordError } from "@/errors";
@@ -58,7 +59,7 @@ export class UserController {
     await this.cookieService.assignRefreshToken(c, refreshTokenId);
 
     /// Returns the created response.
-    return c.json<SuccessResponse<{ id: string }>>(
+    return c.json<SuccessResponse>(
       {
         success: true,
         message: "User created successfully",
@@ -112,10 +113,22 @@ export class UserController {
     await this.cookieService.assignRefreshToken(c, refreshTokenId);
 
     /// Returns the created response.
-    return c.json<SuccessResponse<{ id: string }>>(
+    return c.json<SuccessResponse>(
       {
         success: true,
         message: "User logged in successfully",
+      },
+      StatusCodes.OK,
+    );
+  }
+
+  async whoami(c: Context<{ Variables: AuthVariables }, AuthRoutes.WHO_AM_I>) {
+    /// Returns the success response.
+    return c.json<SuccessResponse<AuthVariables["auth"]>>(
+      {
+        success: true,
+        message: "Authenticated",
+        data: c.get("auth"),
       },
       StatusCodes.OK,
     );

@@ -6,6 +6,16 @@ export const clearDatabase = async () => {
   await database.delete(users);
 };
 
+export const extractTokens = (cookie: string) => {
+  const allCookies = cookie.split(", ");
+  const tokens = allCookies.reduce((prevCkie: string[], ckie) => {
+    const cookieExtracted = ckie.split(";")[0];
+    return [...prevCkie, cookieExtracted];
+  }, []);
+
+  return tokens.join("; ");
+};
+
 export const isValidCookies = (cookie: string): boolean => {
   const allCookies = cookie.split(", ");
   for (const ckie of allCookies) {

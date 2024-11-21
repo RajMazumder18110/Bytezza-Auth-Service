@@ -41,6 +41,6 @@ export const usersRouter = new Hono({ strict: false })
   )
 
   /// Authorized user check
-  .get(AuthRoutes.WHO_AM_I, authenticate, async (c) => {
-    c.get("auth");
-  });
+  .get(AuthRoutes.WHO_AM_I, authenticate(cookieService), (c) =>
+    userController.whoami(c),
+  );

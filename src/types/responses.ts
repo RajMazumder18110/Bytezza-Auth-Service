@@ -1,5 +1,5 @@
-export type SuccessResponse<T extends Record<string, string>> = {
-  data?: T;
+export type SuccessResponse<T extends Record<string, unknown> = never> = {
+  data?: T extends never ? undefined : T;
   success: true;
   message?: string;
 };

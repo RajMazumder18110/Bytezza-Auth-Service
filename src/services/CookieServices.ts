@@ -1,9 +1,12 @@
 /** @notice library imports */
 import { Context } from "hono";
-import { sign } from "hono/jwt";
-import { setCookie } from "hono/cookie";
+import { sign, verify } from "hono/jwt";
+import { JWTPayload } from "hono/utils/jwt/types";
+import { getCookie, setCookie } from "hono/cookie";
 /// Local imports
 import { Environments } from "@/config";
+import { unauthorized } from "@/errors";
+import { AuthVariables } from "@/types/variables";
 import { Cookies, UserRoles } from "@/constants";
 import { CredentialService } from "./CredentialServices";
 
@@ -17,7 +20,7 @@ export class CookieServices {
     /// Generating token
     const token = await sign(
       {
-        exp: age,
+        exp: new Date().getTime() + age,
         id: tokenId,
       },
       Environments.REFRESH_TOKEN_SECRET,
@@ -34,6 +37,19 @@ export class CookieServices {
     });
   }
 
+  async validateRefreshToken(c: Context) {
+    /// Grabbing access token
+    const token = getCookie(c, Cookies.REFRESH_TOKEN);
+    if (!token) throw unauthorized;
+    return (await verify(
+      token,
+      Environments.REFRESH_TOKEN_SECRET,
+      "HS256",
+    )) as JWTPayload & {
+      id: string;
+    };
+  }
+
   async assignAccessToken(
     c: Context,
     payload: { id: string; role: UserRoles },
@@ -48,7 +64,7 @@ export class CookieServices {
     const token = await sign(
       {
         ...payload,
-        exp: age,
+        exp: new Date().getTime() + age,
       },
       privateKey,
       "RS256",
@@ -62,5 +78,24 @@ export class CookieServices {
       sameSite: "Strict",
       domain: "localhost",
     });
+  }
+
+  async validateAccessToken(
+    c: Context,
+  ): Promise<JWTPayload & AuthVariables["auth"]> {
+    /// Grabbing access token
+    const token = getCookie(c, Cookies.ACCESS_TOKEN);
+    if (!token) throw unauthorized;
+
+    try {
+      return (await verify(
+        token,
+        this.credentialService.getPrivateKey(),
+        "RS256",
+      )) as JWTPayload & AuthVariables["auth"];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      throw unauthorized;
+    }
   }
 }

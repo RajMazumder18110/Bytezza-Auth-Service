@@ -14,3 +14,8 @@ export const invalidEmailOrPasswordError = new HTTPException(
     message: "Invalid email or password!",
   },
 );
+
+/// Incase of cookies are not valid
+export const unauthorized = new HTTPException(StatusCodes.UNAUTHORIZED, {
+  message: "Unauthorized!",
+});
