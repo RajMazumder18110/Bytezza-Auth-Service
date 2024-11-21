@@ -10,6 +10,7 @@ import { postgresClient } from "@/config/database";
 import { UsersRepository } from "@/database/users/repository";
 import { ValidationErrorResponse } from "@/types/responses";
 import { CredentialService } from "@/services/CredentialServices";
+import { UserRoles } from "@/constants";
 
 /// Creates a test app client.
 const usersApp = testClient(usersRouter);
@@ -64,6 +65,15 @@ describe("User Registration", () => {
       expect(data).toHaveProperty("message");
       expect(data.success).toBeTruthy();
       expect(data.message).toStrictEqual("User created successfully");
+    });
+
+    it("Should save registered user role as 'CUSTOMER'.", async () => {
+      await usersApp.register.$post({
+        json: newUserParams,
+      });
+
+      const user = await userReo.findByEmail(newUserParams.email);
+      expect(user?.role).toBe(UserRoles.CUSTOMERS);
     });
 
     it("Should create one user into the database.", async () => {
