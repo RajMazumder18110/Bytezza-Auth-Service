@@ -202,4 +202,17 @@ describe("User Registration", () => {
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
     });
   });
+
+  describe("[406] - Non unique email", () => {
+    it("Should return Conflict error as email is not unique.", async () => {
+      await usersApp.register.$post({
+        json: newUserParams,
+      });
+
+      const response = await usersApp.register.$post({
+        json: newUserParams,
+      });
+      expect(response.status).toBe(StatusCodes.CONFLICT);
+    });
+  });
 });
