@@ -3,14 +3,14 @@ import { execSync } from "child_process";
 import { testClient } from "hono/testing";
 import { StatusCodes } from "http-status-codes";
 /// Local imports
-import { clearDatabase } from "@/utils";
+import { clearDatabase, isValidCookies } from "./utils";
 import { NewUserParams } from "@/database";
+import { Cookies, UserRoles } from "@/constants";
 import { usersRouter } from "@/routers/userRouter";
 import { postgresClient } from "@/config/database";
 import { UsersRepository } from "@/database/users/repository";
 import { ValidationErrorResponse } from "@/types/responses";
 import { CredentialService } from "@/services/CredentialServices";
-import { UserRoles } from "@/constants";
 
 /// Creates a test app client.
 const usersApp = testClient(usersRouter);
@@ -25,6 +25,7 @@ describe("User Registration", () => {
     userReo = new UsersRepository(credService);
 
     /// Migrate database
+    execSync("bun run generate:certs");
     execSync("NODE_ENV=test bun run db:push");
   });
 
@@ -94,6 +95,22 @@ describe("User Registration", () => {
       expect(user?.password).not.toBe(newUserParams.password);
       expect(user?.password).toHaveLength(60);
       expect(user?.password).toMatch(/^\$2b\$\d+\$/);
+    });
+
+    it("Should return cookies includes access & refresh token.", async () => {
+      const response = await usersApp.register.$post({
+        json: newUserParams,
+      });
+
+      const cookies = response.headers.get("Set-Cookie");
+      expect(cookies).not.toBeNull();
+      expect(cookies).toStrictEqual(
+        expect.stringContaining(Cookies.ACCESS_TOKEN),
+      );
+      expect(cookies).toStrictEqual(
+        expect.stringContaining(Cookies.REFRESH_TOKEN),
+      );
+      expect(isValidCookies(cookies!)).toBeTruthy();
     });
   });
 

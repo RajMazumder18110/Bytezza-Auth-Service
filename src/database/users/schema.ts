@@ -10,7 +10,7 @@ export const users = pgTable(
   "users",
   {
     /// Core fields
-    id: text().$defaultFn(createId),
+    id: text().primaryKey().$defaultFn(createId),
     name: text().notNull(),
     email: text().notNull(),
     password: text().notNull(),

@@ -6,6 +6,7 @@ interface IEnvironments {
   PORT?: number;
 
   /// Database ///
+  REFRESH_TOKEN_SECRET: string;
   POSTGRES_DATABASE_URL: string;
 }
 
@@ -18,6 +19,9 @@ export const Environments = grabEnv<IEnvironments>({
 
   /// Database ///
   POSTGRES_DATABASE_URL: {
+    type: "string",
+  },
+  REFRESH_TOKEN_SECRET: {
     type: "string",
   },
 });

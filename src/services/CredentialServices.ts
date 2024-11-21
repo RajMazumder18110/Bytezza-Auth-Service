@@ -1,4 +1,6 @@
 /** @notice library imports */
+import { resolve } from "path";
+import { readFileSync } from "fs";
 import { compareSync, hashSync } from "bcrypt";
 
 export class CredentialService {
@@ -10,5 +12,19 @@ export class CredentialService {
 
   isSamePassword(password: string, hashedPassword: string) {
     return compareSync(password, hashedPassword);
+  }
+
+  getPrivateKey() {
+    /// Reading privatekey
+    const privateKey = readFileSync(
+      resolve(process.cwd(), "certs/private.pem"),
+    );
+    return privateKey;
+  }
+
+  getPublicKey() {
+    /// Reading publicKey
+    const publicKey = readFileSync(resolve(process.cwd(), "certs/public.pem"));
+    return publicKey;
   }
 }

@@ -7,14 +7,16 @@ import { emailAlreadyExists } from "@/errors";
 import { AuthRoutes } from "@/constants/routes";
 import { SuccessResponse } from "@/types/responses";
 import { NewUserInput } from "@/validators/userValidator";
+import { CookieServices } from "@/services/CookieServices";
 import { UsersRepository } from "@/database/users/repository";
 import { InjectUserControllerVariables } from "@/types/variables";
 
 export class UserController {
   /// Dependency injection
   constructor(
-    private userRepo: UsersRepository,
     private logger: Logger,
+    private userRepo: UsersRepository,
+    private cookieService: CookieServices,
   ) {}
 
   async register(
@@ -37,13 +39,17 @@ export class UserController {
     }
 
     /// Create user
-    await this.userRepo.create(data);
+    const newUser = await this.userRepo.create(data);
     this.logger.info("User has been registered.", {
       data: {
         name: data.name,
         email: data.email,
       },
     });
+
+    /// Assign cookies (access & refresh token)
+    this.cookieService.assignAccessToken(c, newUser.id);
+    this.cookieService.assignRefreshToken(c, newUser.id);
 
     /// Returns the created response.
     return c.json<SuccessResponse<{ id: string }>>(
