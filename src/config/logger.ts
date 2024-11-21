@@ -30,6 +30,7 @@ export const Logger = winston.createLogger({
     }),
     new winston.transports.Console({
       level: "info",
+      silent: Environments.NODE_ENV === "test",
     }),
   ],
 });
