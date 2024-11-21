@@ -56,7 +56,10 @@ export class UserController {
       id: newUser.id,
       role: newUser.role,
     });
-    await this.cookieService.assignRefreshToken(c, refreshTokenId);
+    await this.cookieService.assignRefreshToken(c, {
+      userId: newUser.id,
+      tokenId: refreshTokenId,
+    });
 
     /// Returns the created response.
     return c.json<SuccessResponse>(
@@ -110,7 +113,10 @@ export class UserController {
       id: user.id,
       role: user.role,
     });
-    await this.cookieService.assignRefreshToken(c, refreshTokenId);
+    await this.cookieService.assignRefreshToken(c, {
+      userId: user.id,
+      tokenId: refreshTokenId,
+    });
 
     /// Returns the created response.
     return c.json<SuccessResponse>(
