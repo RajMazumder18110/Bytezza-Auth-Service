@@ -19,12 +19,12 @@ export class CredentialService {
     const privateKey = readFileSync(
       resolve(process.cwd(), "certs/private.pem"),
     );
-    return privateKey;
+    return privateKey.toString();
   }
 
   getPublicKey() {
     /// Reading publicKey
     const publicKey = readFileSync(resolve(process.cwd(), "certs/public.pem"));
-    return publicKey;
+    return publicKey.toString();
   }
 }

@@ -48,8 +48,12 @@ export class UserController {
     });
 
     /// Assign cookies (access & refresh token)
-    this.cookieService.assignAccessToken(c, newUser.id);
-    this.cookieService.assignRefreshToken(c, newUser.id);
+    const payload = {
+      id: newUser.id,
+      role: newUser.role,
+    };
+    await this.cookieService.assignAccessToken(c, payload);
+    await this.cookieService.assignRefreshToken(c, payload);
 
     /// Returns the created response.
     return c.json<SuccessResponse<{ id: string }>>(
