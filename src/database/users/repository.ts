@@ -3,15 +3,26 @@ import { count, eq } from "drizzle-orm";
 /// local imports
 import { database } from "@/config/database";
 import { NewUserParams, users } from "./schema";
+import { CredentialService } from "@/services/CredentialServices";
 
 /// User table handler.
 export class UsersRepository {
+  constructor(private credentialService: CredentialService) {}
+
   /**
    * @dev Creates a brand new user.
    * @param {NewUserParams} data The new user params.
    */
   async create(data: NewUserParams) {
-    await database.insert(users).values(data);
+    const hashedPassword = this.credentialService.hashPassword(data.password);
+    const [result] = await database
+      .insert(users)
+      .values({
+        ...data,
+        password: hashedPassword,
+      })
+      .returning();
+    return result;
   }
 
   /**

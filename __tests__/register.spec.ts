@@ -9,6 +9,7 @@ import { usersRouter } from "@/routers/userRouter";
 import { postgresClient } from "@/config/database";
 import { UsersRepository } from "@/database/users/repository";
 import { ValidationErrorResponse } from "@/types/responses";
+import { CredentialService } from "@/services/CredentialServices";
 
 /// Creates a test app client.
 const usersApp = testClient(usersRouter);
@@ -16,9 +17,11 @@ const usersApp = testClient(usersRouter);
 describe("User Registration", () => {
   /// Instances
   let userReo: UsersRepository;
+  let credService: CredentialService;
 
   beforeAll(async () => {
-    userReo = new UsersRepository();
+    credService = new CredentialService();
+    userReo = new UsersRepository(credService);
 
     /// Migrate database
     execSync("NODE_ENV=test bun run db:push");
@@ -70,6 +73,17 @@ describe("User Registration", () => {
 
       const count = await userReo.noOfUsers();
       expect(count).toBe(1);
+    });
+
+    it("Should save password as hashed password.", async () => {
+      await usersApp.register.$post({
+        json: newUserParams,
+      });
+
+      const user = await userReo.findByEmail(newUserParams.email);
+      expect(user?.password).not.toBe(newUserParams.password);
+      expect(user?.password).toHaveLength(60);
+      expect(user?.password).toMatch(/^\$2b\$\d+\$/);
     });
   });
 
