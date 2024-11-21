@@ -1,6 +1,6 @@
 export const enum UserRoles {
   ADMIN = "ADMIN",
-  CUSTOMERS = "CUSTOMERS",
+  CUSTOMER = "CUSTOMER",
 }
 
 export const enum Cookies {

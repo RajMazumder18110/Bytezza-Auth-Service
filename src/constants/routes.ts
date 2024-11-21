@@ -5,4 +5,5 @@ export const enum ApplicationRoutes {
 }
 export const enum AuthRoutes {
   REGISTER = "/register",
+  WHO_AM_I = "/whoami",
 }

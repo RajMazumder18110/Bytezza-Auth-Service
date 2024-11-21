@@ -16,9 +16,9 @@ export const users = pgTable(
     name: text().notNull(),
     email: text().notNull(),
     password: text().notNull(),
-    role: text({ enum: [UserRoles.CUSTOMERS, UserRoles.ADMIN] })
+    role: text({ enum: [UserRoles.CUSTOMER, UserRoles.ADMIN] })
       .notNull()
-      .default(UserRoles.CUSTOMERS),
+      .default(UserRoles.CUSTOMER),
 
     /// Timestamps
     ...timestamps,

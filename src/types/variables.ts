@@ -1,6 +1,9 @@
 /** @notice library imports */
-import { UserController } from "@/controllers/UserController";
+import { UserRoles } from "@/constants";
 
-export type InjectUserControllerVariables = {
-  userController: UserController;
+export type AuthVariables = {
+  auth: {
+    id: string;
+    role: UserRoles;
+  };
 };

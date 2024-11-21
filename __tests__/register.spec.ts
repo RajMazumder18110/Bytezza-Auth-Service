@@ -79,7 +79,7 @@ describe("User Registration", () => {
       });
 
       const user = await userReo.findByEmail(newUserParams.email);
-      expect(user?.role).toBe(UserRoles.CUSTOMERS);
+      expect(user?.role).toBe(UserRoles.CUSTOMER);
     });
 
     it("Should create one user into the database.", async () => {

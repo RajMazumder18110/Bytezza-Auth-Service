@@ -1,13 +1,13 @@
 /** @notice Library imports */
 import { Context } from "hono";
 import type { Logger } from "winston";
+import { BlankEnv } from "hono/types";
 import { StatusCodes } from "http-status-codes";
 /// Local imports
 import { emailAlreadyExists } from "@/errors";
 import { AuthRoutes } from "@/constants/routes";
 import { SuccessResponse } from "@/types/responses";
 import { NewUserInput } from "@/validators/userValidator";
-import { InjectUserControllerVariables } from "@/types/variables";
 import { CookieServices, UsersServices, AuthTokenServices } from "@/services";
 
 export class UserController {
@@ -19,13 +19,7 @@ export class UserController {
     private tokenServices: AuthTokenServices,
   ) {}
 
-  async register(
-    c: Context<
-      { Variables: InjectUserControllerVariables },
-      AuthRoutes.REGISTER,
-      NewUserInput
-    >,
-  ) {
+  async register(c: Context<BlankEnv, AuthRoutes.REGISTER, NewUserInput>) {
     /// Grabbing validated data
     const data = c.req.valid("json");
 
