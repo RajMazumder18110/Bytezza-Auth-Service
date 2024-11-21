@@ -4,6 +4,7 @@ export const enum ApplicationRoutes {
   AUTH = `${API_PREFIX}/auth`,
 }
 export const enum AuthRoutes {
-  REGISTER = "/register",
+  LOGIN = "/login",
   WHO_AM_I = "/whoami",
+  REGISTER = "/register",
 }

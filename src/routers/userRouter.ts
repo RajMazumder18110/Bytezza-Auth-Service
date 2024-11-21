@@ -4,7 +4,7 @@ import { Hono } from "hono";
 import { Logger } from "@/config";
 import { AuthRoutes } from "@/constants/routes";
 import { authenticate } from "@/middlewares/authenticate";
-import { newUserSchema } from "@/validators/userValidator";
+import { loginUserSchema, newUserSchema } from "@/validators/userValidator";
 import { UserController } from "@/controllers/UserController";
 import { validateSchema } from "@/middlewares/schemaValidateMiddleware";
 import {
@@ -24,6 +24,7 @@ const userController = new UserController(
   userService,
   cookieService,
   authTokenService,
+  credService,
 );
 
 /// Users router
@@ -35,6 +36,9 @@ export const usersRouter = new Hono({ strict: false })
   )
 
   /// Login a registered user
+  .post(AuthRoutes.LOGIN, validateSchema(loginUserSchema), (c) =>
+    userController.login(c),
+  )
 
   /// Authorized user check
   .get(AuthRoutes.WHO_AM_I, authenticate, async (c) => {
