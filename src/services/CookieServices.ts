@@ -57,6 +57,7 @@ export class CookieServices {
     /// Assign cookie
     setCookie(c, Cookies.ACCESS_TOKEN, token, {
       maxAge: age,
+      secure: true,
       httpOnly: true,
       sameSite: "Strict",
       domain: "localhost",
