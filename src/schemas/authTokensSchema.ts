@@ -3,8 +3,8 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { boolean, pgTable, text } from "drizzle-orm/pg-core";
 /// Local imports
-import { users } from "@/database";
-import { timestamps } from "../common";
+import { users } from "./usersSchema";
+import { timestamps } from "./common";
 
 /// Core tokens table
 export const authTokens = pgTable("tokens", {

@@ -1,5 +1,5 @@
 /** @notice local imports */
-import { users } from "@/database";
+import { users } from "@/schemas";
 import { database } from "@/config/database";
 
 export const clearDatabase = async () => {

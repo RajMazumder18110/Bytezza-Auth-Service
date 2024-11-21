@@ -2,11 +2,11 @@
 import { count, eq } from "drizzle-orm";
 /// local imports
 import { database } from "@/config/database";
-import { NewUserParams, users } from "./schema";
+import { NewUserParams, users } from "@/schemas";
 import { CredentialService } from "@/services/CredentialServices";
 
 /// User table handler.
-export class UsersRepository {
+export class UsersServices {
   constructor(private credentialService: CredentialService) {}
 
   /**

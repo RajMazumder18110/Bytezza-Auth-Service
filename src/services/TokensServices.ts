@@ -2,10 +2,10 @@
 import { count, eq } from "drizzle-orm";
 /// local imports
 import { database } from "@/config/database";
-import { authTokens, NewAuthToken } from "./schema";
+import { authTokens, NewAuthToken } from "@/schemas";
 
 /// User table handler.
-export class AuthTokenRepository {
+export class AuthTokenServices {
   async create(data: NewAuthToken) {
     const [result] = await database.insert(authTokens).values(data).returning({
       id: authTokens.id,

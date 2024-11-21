@@ -9,7 +9,7 @@ import {
 export default defineConfig({
   dialect: "postgresql",
   out: DATABASE_MIGRATIONS_PATH,
-  schema: "./src/database/index.ts",
+  schema: "./src/schemas/index.ts",
   dbCredentials: {
     url: Environments.POSTGRES_DATABASE_URL,
   },

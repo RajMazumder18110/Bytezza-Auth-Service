@@ -3,9 +3,9 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
 /// Local imports
-import { timestamps } from "../common";
+import { timestamps } from "./common";
 import { UserRoles } from "@/constants";
-import { authTokens } from "@/database";
+import { authTokens } from "./authTokensSchema";
 
 /// Core User table
 export const users = pgTable(

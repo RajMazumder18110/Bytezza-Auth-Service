@@ -7,18 +7,16 @@ import { emailAlreadyExists } from "@/errors";
 import { AuthRoutes } from "@/constants/routes";
 import { SuccessResponse } from "@/types/responses";
 import { NewUserInput } from "@/validators/userValidator";
-import { CookieServices } from "@/services/CookieServices";
-import { UsersRepository } from "@/database/users/repository";
 import { InjectUserControllerVariables } from "@/types/variables";
-import { AuthTokenRepository } from "@/database/tokens/repository";
+import { CookieServices, UsersServices, AuthTokenServices } from "@/services";
 
 export class UserController {
   /// Dependency injection
   constructor(
     private logger: Logger,
-    private userRepo: UsersRepository,
+    private userServices: UsersServices,
     private cookieService: CookieServices,
-    private authTokenRepo: AuthTokenRepository,
+    private tokenServices: AuthTokenServices,
   ) {}
 
   async register(
@@ -32,7 +30,7 @@ export class UserController {
     const data = c.req.valid("json");
 
     /// Check if user already exists
-    const user = await this.userRepo.findByEmail(data.email);
+    const user = await this.userServices.findByEmail(data.email);
     if (user) {
       this.logger.error("Email already exists", {
         data: { email: data.email },
@@ -41,7 +39,7 @@ export class UserController {
     }
 
     /// Create user
-    const newUser = await this.userRepo.create(data);
+    const newUser = await this.userServices.create(data);
     this.logger.info("User has been registered.", {
       data: {
         name: data.name,
@@ -50,7 +48,7 @@ export class UserController {
     });
 
     /// Assign cookies (access & refresh token)
-    const refreshTokenId = await this.authTokenRepo.create({
+    const refreshTokenId = await this.tokenServices.create({
       userId: newUser.id,
     });
     await this.cookieService.assignAccessToken(c, {

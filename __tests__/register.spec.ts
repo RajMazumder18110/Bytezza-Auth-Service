@@ -3,29 +3,31 @@ import { execSync } from "child_process";
 import { testClient } from "hono/testing";
 import { StatusCodes } from "http-status-codes";
 /// Local imports
-import { clearDatabase, isValidCookies } from "./utils";
-import { NewUserParams } from "@/database";
+import { NewUserParams } from "@/schemas";
 import { Cookies, UserRoles } from "@/constants";
 import { usersRouter } from "@/routers/userRouter";
 import { postgresClient } from "@/config/database";
-import { UsersRepository } from "@/database/users/repository";
+import { clearDatabase, isValidCookies } from "./utils";
 import { ValidationErrorResponse } from "@/types/responses";
-import { CredentialService } from "@/services/CredentialServices";
-import { AuthTokenRepository } from "@/database/tokens/repository";
+import {
+  CredentialService,
+  AuthTokenServices,
+  UsersServices,
+} from "@/services";
 
 /// Creates a test app client.
 const usersApp = testClient(usersRouter);
 
 describe("User Registration", () => {
   /// Instances
-  let userReo: UsersRepository;
+  let userReo: UsersServices;
   let credService: CredentialService;
-  let authTokenRepo: AuthTokenRepository;
+  let authTokenRepo: AuthTokenServices;
 
   beforeAll(async () => {
     credService = new CredentialService();
-    authTokenRepo = new AuthTokenRepository();
-    userReo = new UsersRepository(credService);
+    authTokenRepo = new AuthTokenServices();
+    userReo = new UsersServices(credService);
 
     /// Migrate database
     execSync("bun run generate:certs");
