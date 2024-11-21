@@ -1,9 +1,11 @@
 /** @notice library imports */
+import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
 /// Local imports
 import { timestamps } from "../common";
 import { UserRoles } from "@/constants";
+import { authTokens } from "@/database";
 
 /// Core User table
 export const users = pgTable(
@@ -23,6 +25,11 @@ export const users = pgTable(
   },
   (table) => [uniqueIndex("userEmailIdx").on(table.email)],
 );
+
+/// Relations
+export const userRelations = relations(users, ({ many }) => ({
+  tokens: many(authTokens),
+}));
 
 /// Types
 export type User = typeof users.$inferSelect;

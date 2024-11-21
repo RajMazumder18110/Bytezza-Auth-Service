@@ -8,12 +8,19 @@ import { UsersRepository } from "@/database/users/repository";
 import { UserController } from "@/controllers/UserController";
 import { InjectUserControllerVariables } from "@/types/variables";
 import { CredentialService } from "@/services/CredentialServices";
+import { AuthTokenRepository } from "@/database/tokens/repository";
 
 /// Instances
 const credService = new CredentialService();
+const authTokenRepo = new AuthTokenRepository();
 const userRepo = new UsersRepository(credService);
 const cookieService = new CookieServices(credService);
-const userController = new UserController(Logger, userRepo, cookieService);
+const userController = new UserController(
+  Logger,
+  userRepo,
+  cookieService,
+  authTokenRepo,
+);
 
 /// Inject middleware
 export const injectUserController = createMiddleware(

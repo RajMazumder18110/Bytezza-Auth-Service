@@ -11,6 +11,7 @@ import { postgresClient } from "@/config/database";
 import { UsersRepository } from "@/database/users/repository";
 import { ValidationErrorResponse } from "@/types/responses";
 import { CredentialService } from "@/services/CredentialServices";
+import { AuthTokenRepository } from "@/database/tokens/repository";
 
 /// Creates a test app client.
 const usersApp = testClient(usersRouter);
@@ -19,9 +20,11 @@ describe("User Registration", () => {
   /// Instances
   let userReo: UsersRepository;
   let credService: CredentialService;
+  let authTokenRepo: AuthTokenRepository;
 
   beforeAll(async () => {
     credService = new CredentialService();
+    authTokenRepo = new AuthTokenRepository();
     userReo = new UsersRepository(credService);
 
     /// Migrate database
@@ -111,6 +114,15 @@ describe("User Registration", () => {
         expect.stringContaining(Cookies.REFRESH_TOKEN),
       );
       expect(isValidCookies(cookies!)).toBeTruthy();
+    });
+
+    it("Should persist refresh token into database.", async () => {
+      await usersApp.register.$post({
+        json: newUserParams,
+      });
+
+      const count = await authTokenRepo.noOfTokens();
+      expect(count).toBe(1);
     });
   });
 

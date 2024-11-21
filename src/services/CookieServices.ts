@@ -10,18 +10,15 @@ import { CredentialService } from "./CredentialServices";
 export class CookieServices {
   constructor(private credentialService: CredentialService) {}
 
-  async assignRefreshToken(
-    c: Context,
-    payload: { id: string; role: UserRoles },
-  ) {
+  async assignRefreshToken(c: Context, tokenId: string) {
     /// refresh token age
     const age = 60 * 60 * 24 * 365; // 1y
 
     /// Generating token
     const token = await sign(
       {
-        ...payload,
         exp: age,
+        id: tokenId,
       },
       Environments.REFRESH_TOKEN_SECRET,
       "HS256",

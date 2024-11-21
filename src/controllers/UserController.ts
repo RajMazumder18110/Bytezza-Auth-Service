@@ -10,6 +10,7 @@ import { NewUserInput } from "@/validators/userValidator";
 import { CookieServices } from "@/services/CookieServices";
 import { UsersRepository } from "@/database/users/repository";
 import { InjectUserControllerVariables } from "@/types/variables";
+import { AuthTokenRepository } from "@/database/tokens/repository";
 
 export class UserController {
   /// Dependency injection
@@ -17,6 +18,7 @@ export class UserController {
     private logger: Logger,
     private userRepo: UsersRepository,
     private cookieService: CookieServices,
+    private authTokenRepo: AuthTokenRepository,
   ) {}
 
   async register(
@@ -48,12 +50,14 @@ export class UserController {
     });
 
     /// Assign cookies (access & refresh token)
-    const payload = {
+    const refreshTokenId = await this.authTokenRepo.create({
+      userId: newUser.id,
+    });
+    await this.cookieService.assignAccessToken(c, {
       id: newUser.id,
       role: newUser.role,
-    };
-    await this.cookieService.assignAccessToken(c, payload);
-    await this.cookieService.assignRefreshToken(c, payload);
+    });
+    await this.cookieService.assignRefreshToken(c, refreshTokenId);
 
     /// Returns the created response.
     return c.json<SuccessResponse<{ id: string }>>(
