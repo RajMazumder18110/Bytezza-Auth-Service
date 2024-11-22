@@ -7,4 +7,5 @@ export const enum AuthRoutes {
   LOGIN = "/login",
   WHO_AM_I = "/whoami",
   REGISTER = "/register",
+  LOGOUT = "/logout",
 }

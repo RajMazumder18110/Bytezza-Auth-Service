@@ -2,7 +2,7 @@
 import { Context } from "hono";
 import { sign, verify } from "hono/jwt";
 import { JWTPayload } from "hono/utils/jwt/types";
-import { getCookie, setCookie } from "hono/cookie";
+import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 /// Local imports
 import { Environments } from "@/config";
 import { unauthorized } from "@/errors";
@@ -101,5 +101,10 @@ export class CookieServices {
     } catch (err) {
       throw unauthorized;
     }
+  }
+
+  invalidateAllTokens(c: Context) {
+    deleteCookie(c, Cookies.ACCESS_TOKEN);
+    deleteCookie(c, Cookies.REFRESH_TOKEN);
   }
 }

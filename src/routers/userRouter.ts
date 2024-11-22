@@ -40,6 +40,11 @@ export const usersRouter = new Hono({ strict: false })
     userController.login(c),
   )
 
+  /// Logout a authorized user.
+  .post(AuthRoutes.LOGOUT, authenticate(cookieService), (c) =>
+    userController.logout(c),
+  )
+
   /// Authorized user check
   .get(AuthRoutes.WHO_AM_I, authenticate(cookieService), (c) =>
     userController.whoami(c),

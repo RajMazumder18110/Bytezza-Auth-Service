@@ -1,5 +1,5 @@
 /** @notice Library imports */
-import { count, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 /// local imports
 import { database } from "@/config/database";
 import { authTokens, NewAuthToken } from "@/schemas";
@@ -31,7 +31,7 @@ export class AuthTokenServices {
       .set({
         isActive: false,
       })
-      .where(eq(authTokens.userId, userId));
+      .where(and(eq(authTokens.userId, userId), eq(authTokens.isActive, true)));
   }
 
   async revokeAllTokensId(tokenId: string) {

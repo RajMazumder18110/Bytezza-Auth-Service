@@ -139,4 +139,26 @@ export class UserController {
       StatusCodes.OK,
     );
   }
+
+  async logout(c: Context<{ Variables: AuthVariables }, AuthRoutes.LOGOUT>) {
+    /// Grabbing authenticated user data
+    const user = c.get("auth");
+
+    /// revoke refresh tokens.
+    await this.tokenServices.revokeAllTokensOfUserId(user.id);
+    this.logger.info("Revoked auth tokens", { uid: user.id });
+
+    /// Remove cookies
+    this.cookieService.invalidateAllTokens(c);
+
+    /// Returns the success response.
+    return c.json<SuccessResponse<AuthVariables["auth"]>>(
+      {
+        success: true,
+        message: "Successfully logged out!",
+        data: c.get("auth"),
+      },
+      StatusCodes.OK,
+    );
+  }
 }
