@@ -161,4 +161,31 @@ export class UserController {
       StatusCodes.OK,
     );
   }
+
+  async refresh(c: Context<{ Variables: AuthVariables }, AuthRoutes.REFRESH>) {
+    /// Grabbing auth data
+    const user = c.get("auth");
+
+    /// Assign cookies (access & refresh token)
+    const refreshTokenId = await this.tokenServices.create({
+      userId: user.id,
+    });
+    await this.cookieService.assignAccessToken(c, {
+      id: user.id,
+      role: user.role,
+    });
+    await this.cookieService.assignRefreshToken(c, {
+      userId: user.id,
+      tokenId: refreshTokenId,
+    });
+
+    /// Returns the created response.
+    return c.json<SuccessResponse>(
+      {
+        success: true,
+        message: "Token successfully refreshed!",
+      },
+      StatusCodes.OK,
+    );
+  }
 }

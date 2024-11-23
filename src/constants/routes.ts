@@ -8,4 +8,5 @@ export const enum AuthRoutes {
   WHO_AM_I = "/whoami",
   REGISTER = "/register",
   LOGOUT = "/logout",
+  REFRESH = "/refresh",
 }

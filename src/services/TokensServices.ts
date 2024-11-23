@@ -15,7 +15,14 @@ export class AuthTokenServices {
 
   async isValidAuthTokenId(id: string) {
     const token = await database.query.authTokens.findFirst({
-      where: eq(authTokens.id, id),
+      where: and(eq(authTokens.id, id), eq(authTokens.isActive, true)),
+    });
+    return token !== undefined;
+  }
+
+  async isUsingRevokedAuthTokenId(id: string) {
+    const token = await database.query.authTokens.findFirst({
+      where: and(eq(authTokens.id, id), eq(authTokens.isActive, false)),
     });
     return token !== undefined;
   }
@@ -34,7 +41,7 @@ export class AuthTokenServices {
       .where(and(eq(authTokens.userId, userId), eq(authTokens.isActive, true)));
   }
 
-  async revokeAllTokensId(tokenId: string) {
+  async revokeTokensId(tokenId: string) {
     await database
       .update(authTokens)
       .set({

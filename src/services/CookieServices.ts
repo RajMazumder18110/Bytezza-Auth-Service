@@ -51,6 +51,7 @@ export class CookieServices {
       "HS256",
     )) as JWTPayload & {
       id: string;
+      uid: string;
     };
   }
 

@@ -13,6 +13,7 @@ import {
   CredentialService,
   AuthTokenServices,
 } from "@/services";
+import { validateRefreshToken } from "@/middlewares/validateRefreshToken";
 
 /// Instances
 const credService = new CredentialService();
@@ -43,6 +44,13 @@ export const usersRouter = new Hono({ strict: false })
   /// Logout a authorized user.
   .post(AuthRoutes.LOGOUT, authenticate(cookieService), (c) =>
     userController.logout(c),
+  )
+
+  /// Refresh tokens
+  .post(
+    AuthRoutes.REFRESH,
+    validateRefreshToken(Logger, cookieService, authTokenService, userService),
+    (c) => userController.refresh(c),
   )
 
   /// Authorized user check
